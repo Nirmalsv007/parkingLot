@@ -27,3 +27,11 @@ class ParkingLot:
                 return {"level": level.level_name, "spot": spot.spot_number}
         raise NoAvailableParkingSpotException("No available parking spots.")
 
+    def retrieve_parking_spot(self, vehicle_number: str) -> Optional[Dict[str, Union[str, int]]]:
+        for level in self.levels:
+            for spot in level.spots:
+                if spot.is_occupied and spot.vehicle.vehicle_number == vehicle_number:
+                    entry_time = self.manager.entry_log.get(vehicle_number)
+                    if entry_time:
+                        return {"level": level.level_name, "spot": spot.spot_number, "entry_time": entry_time, "exit_time": datetime.now()}
+        raise VehicleNotFoundException("Vehicle not found in the parking lot.")
