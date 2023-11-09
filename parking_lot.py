@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, Dict, Union
 
-from exceptions import NoAvailableParkingSpotException, VehicleNotFoundException
+from exceptions import NoAvailableParkingSpotException, VehicleNotFoundException, DuplicateLicensePlateException
 from parking_level import ParkingLevel
 from parking_manager import ParkingManager
 from vehicle import Vehicle
@@ -15,8 +15,7 @@ class ParkingLot:
 
     def assign_parking_spot(self, vehicle: Vehicle) -> Optional[Dict[str, Union[str, int]]]:
         if vehicle.vehicle_number in self.allocated_vehicle_numbers:
-            print("Duplicate license plate detected.")
-            return None
+            raise DuplicateLicensePlateException("Duplicate license plate detected.")
 
         for level in self.levels:
             spot = level.find_available_spot()
